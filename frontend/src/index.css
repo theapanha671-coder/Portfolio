@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #0f0d0a;
+  --bg-secondary: #15110d;
+  --text-primary: #f5efe6;
+  --text-secondary: #b9afa3;
+  --border-color: #2a241d;
+  --accent-primary: #c21f2e;
+  --accent-secondary: #d4a373;
+}
+
+html.dark {
+  --bg-primary: #0f0d0a;
+  --bg-secondary: #15110d;
+  --bg-tertiary: #1d1813;
+  --text-primary: #f5efe6;
+  --text-secondary: #b9afa3;
+  --border-color: #2a241d;
+  --accent-primary: #c21f2e;
+  --accent-secondary: #d4a373;
+  --shadow-dark: 0 18px 60px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Inter, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background: rgba(194, 31, 46, 0.35);
+  color: #fff;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-red-700 to-amber-600 px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-[#f2e9dd] transition-colors hover:bg-white/10;
+  }
+
+  .card {
+    @apply rounded-[1.5rem] border border-white/10 bg-[#15110d]/90 shadow-[0_18px_50px_rgba(0,0,0,0.25)] transition-all duration-300;
+  }
+
+  .section-heading {
+    @apply mb-12 text-center text-4xl font-black tracking-tight text-[#f6efe6] md:text-5xl;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-red-500 via-amber-500 to-orange-400 bg-clip-text text-transparent;
+  }
+
+  .dark-glassmorphism {
+    @apply rounded-[1.5rem] border border-white/10 bg-white/5 backdrop-blur-xl;
+  }
+
+  .dark-surface {
+    @apply bg-[#15110d] transition-colors duration-300;
+  }
+
+  .dark-elevated {
+    @apply bg-[#1d1813] transition-colors duration-300;
+  }
+
+  .dark-input {
+    @apply w-full rounded-2xl border border-white/10 bg-[#100d0a] px-4 py-3 text-[#f5efe6] placeholder:text-[#7e7367] outline-none transition-colors focus:border-[#c21f2e]/50;
+  }
+
+  .dark-link {
+    @apply text-[#d4a373] transition-colors hover:text-white;
+  }
+
+  .dark-divider {
+    @apply border-white/10 transition-colors duration-300;
+  }
+}
