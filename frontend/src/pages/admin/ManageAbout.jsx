@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FaSave, FaUndo, FaUpload } from 'react-icons/fa';
+import { uploadToCloudinary } from '../../utils/cloudinaryUpload';
 
 export default function ManageAbout() {
   const [aboutData, setAboutData] = useState({
@@ -23,6 +24,7 @@ export default function ManageAbout() {
   });
 
   const [isSaved, setIsSaved] = useState(false);
+  const [isUploadingMedia, setIsUploadingMedia] = useState(false);
   const [originalData] = useState(aboutData);
 
   const handleChange = (field, value) => {
@@ -65,12 +67,13 @@ export default function ManageAbout() {
     setAboutData(originalData);
   };
 
-  const handleMediaUpload = (e) => {
+  const handleMediaUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File is too large. Max size is 5MB');
+    if (file.size > 150 * 1024 * 1024) {
+      alert('File is too large. Max size is 150MB');
+      e.target.value = '';
       return;
     }
 
@@ -79,19 +82,29 @@ export default function ManageAbout() {
 
     if (!isImage && !isVideo) {
       alert('Please select an image or video file');
+      e.target.value = '';
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
+    try {
+      setIsUploadingMedia(true);
+      const uploaded = await uploadToCloudinary(file, {
+        resourceType: 'auto',
+        folder: 'portfolio/about',
+      });
+
       setAboutData((prev) => ({
         ...prev,
-        profileImage: event.target.result,
-        profileMediaType: isVideo ? 'video' : 'image',
+        profileImage: uploaded.url,
+        profileMediaType: uploaded.resourceType === 'video' || isVideo ? 'video' : 'image',
       }));
       setIsSaved(false);
-    };
-    reader.readAsDataURL(file);
+    } catch (error) {
+      alert(error.message || 'Unable to upload media to Cloudinary');
+    } finally {
+      setIsUploadingMedia(false);
+      e.target.value = '';
+    }
   };
 
   return (
@@ -168,7 +181,7 @@ export default function ManageAbout() {
                 <input type="file" accept="image/*,video/*" onChange={handleMediaUpload} className="hidden" id="mediaUpload" />
                 <label htmlFor="mediaUpload" className="inline-flex cursor-pointer items-center gap-2 text-[#d4a373]">
                   <FaUpload />
-                  Upload Image or 4K Video
+                  {isUploadingMedia ? 'Uploading to Cloudinary...' : 'Upload Image or 4K Video'}
                 </label>
               </div>
               <input
@@ -185,7 +198,7 @@ export default function ManageAbout() {
                   }
                 }}
                 className="dark-input mt-3"
-                placeholder="Or paste image or video URL here"
+                placeholder="Or paste a Cloudinary image or video URL here"
               />
               <p className="mt-2 text-xs text-[#8a7f75]">Tip: use `profile.mp4` for a looping profile video.</p>
             </div>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FaEdit, FaExternalLinkAlt, FaGithub, FaPlus, FaUpload, FaTrash } from 'react-icons/fa';
+import { uploadToCloudinary } from '../../utils/cloudinaryUpload';
 
 export default function ManageProjects() {
   const [projects, setProjects] = useState([
@@ -29,6 +30,7 @@ export default function ManageProjects() {
 
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -78,28 +80,39 @@ export default function ManageProjects() {
     });
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File is too large. Max size is 5MB');
+    if (file.size > 50 * 1024 * 1024) {
+      alert('File is too large. Max size is 50MB');
+      e.target.value = '';
       return;
     }
 
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file');
+      e.target.value = '';
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
+    try {
+      setIsUploadingImage(true);
+      const uploaded = await uploadToCloudinary(file, {
+        resourceType: 'auto',
+        folder: 'portfolio/projects',
+      });
+
       setFormData((prev) => ({
         ...prev,
-        image: event.target.result,
+        image: uploaded.url,
       }));
-    };
-    reader.readAsDataURL(file);
+    } catch (error) {
+      alert(error.message || 'Unable to upload project image to Cloudinary');
+    } finally {
+      setIsUploadingImage(false);
+      e.target.value = '';
+    }
   };
 
   const handleAddProject = (e) => {
@@ -269,15 +282,17 @@ export default function ManageProjects() {
                 />
                 <label htmlFor="projectImageUpload" className="flex cursor-pointer flex-col items-center">
                   <FaUpload className="mb-2 text-2xl text-[#d4a373]" />
-                  <p className="text-sm font-semibold text-white">Click to upload project image</p>
-                  <p className="mt-1 text-xs text-[#8a7f75]">PNG, JPG, GIF (Max 5MB)</p>
+                  <p className="text-sm font-semibold text-white">
+                    {isUploadingImage ? 'Uploading to Cloudinary...' : 'Click to upload project image'}
+                  </p>
+                  <p className="mt-1 text-xs text-[#8a7f75]">PNG, JPG, GIF (Max 50MB)</p>
                 </label>
               </div>
 
               {formData.image && (
                 <div className="mt-3 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-3">
                   <div className="flex items-center gap-3">
-                    {formData.image.startsWith('data:') && (
+                    {(formData.image.startsWith('data:') || formData.image.startsWith('http')) && (
                       <img src={formData.image} alt="Project" className="h-12 w-12 rounded object-cover" />
                     )}
                     <span className="text-sm text-[#b9afa3]">Image selected</span>
