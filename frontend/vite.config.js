@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [js()],
+  envPrefix: ['VITE_', 'CLOUDINARY_'],
   resolve: {
     alias: {
       '@': '/src',
