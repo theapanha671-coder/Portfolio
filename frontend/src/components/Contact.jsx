@@ -23,7 +23,7 @@ export default function Contact() {
     setStatus(null);
 
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
       await axios.post(`${apiUrl}/contact`, formData);
       setStatus({ type: 'success', message: "Message sent successfully! I\'ll get back to you soon." });
       setFormData({ name: '', email: '', subject: '', message: '' });
