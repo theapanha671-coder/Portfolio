@@ -5,7 +5,7 @@ const getCloudinaryConfig = () => {
 
   if (!cloudName || !uploadPreset) {
     throw new Error(
-      'Missing Cloudinary configuration. Set VITE_CLOUDINARY_CLOUD_NAME/VITE_CLOUDINARY_UPLOAD_PRESET or CLOUDINARY_CLOUD_NAME/CLOUDINARY_UPLOAD_PRESET.',
+      'Missing Cloudinary configuration. Set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in frontend/.env (or the CLOUDINARY_ equivalents), then restart the dev server.',
     );
   }
 

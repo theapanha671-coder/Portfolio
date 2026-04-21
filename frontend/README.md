@@ -12,7 +12,9 @@ npm install
 Create `.env` file in the frontend directory:
 
 ```
-REACT_APP_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000/api
+VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
+VITE_CLOUDINARY_UPLOAD_PRESET=your_unsigned_upload_preset
 ```
 
 ## Available Scripts
@@ -154,7 +156,7 @@ PORT=3001 npm start
 
 **CORS errors?**
 - Check backend CORS configuration
-- Verify `REACT_APP_API_URL` matches backend URL
+- Verify `VITE_API_URL` matches backend URL
 
 **Build errors?**
 - Clear node_modules and reinstall
