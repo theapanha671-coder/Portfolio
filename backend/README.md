@@ -18,6 +18,9 @@ MONGODB_URI=mongodb://localhost:27017/portfolio
 # For MongoDB Atlas:
 # MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/portfolio
 CLIENT_URL=http://localhost:3000
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 ## Available Scripts
@@ -212,6 +215,16 @@ await transporter.sendMail({
   text: message,
 });
 ```
+
+## Cloudinary Credentials
+
+If you plan to use signed Cloudinary uploads from the backend, add these to `backend/.env` or your Render backend service:
+
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+
+Keep these on the server only. Do not expose `API_SECRET` in the frontend.
 
 ## Production Deployment
 
